@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/auth/login_page.dart';
+import 'package:read_rover/ui/auth/login_page.dart';
+import 'package:read_rover/data/model/signup_model.dart';
 import 'package:read_rover/data/model/login_model.dart';
 import 'package:read_rover/data/model/network_response.dart';
 import 'package:read_rover/data/services/network_caller.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 import 'package:read_rover/data/utils/urls.dart';
-import 'package:read_rover/home_page.dart';
-import 'package:read_rover/widgets/constraints.dart';
+import 'package:read_rover/ui/home_page.dart';
+import 'package:read_rover/ui/widgets/constraints.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -42,15 +43,17 @@ class _SignupPageState extends State<SignupPage> {
       setState(() {});
     }
     if (response.isSuccess) {
-      Map<String, dynamic> requestBody = {
-        "email": _emailController.text.trim(),
-        "password": _passWordController.text,
-      };
-      final NetworkResponse response =
-          await NetworkCaller().postRequest(Urls.login, requestBody);
-      if (response.isSuccess) {
-        AuthUtils.saveUserInfo(LoginModel.fromJson(response.body!));
-        setState(() {});
+      // Map<String, dynamic> requestBody = {
+      //   "email": _emailController.text.trim(),
+      //   "password": _passWordController.text,
+      // };
+      // final NetworkResponse response =
+      //     await NetworkCaller().postRequest(Urls.login, requestBody);
+      // if (response.isSuccess) {
+      //   AuthUtils.saveUserInfo(LoginModel.fromJson(response.body!));
+      //   setState(() {});
+      SignupModel model = SignupModel.fromJson(response.body!);
+      AuthUtils.saveSignupUserInfo(model);
         if (mounted) {
           Navigator.pushAndRemoveUntil(
               context,
@@ -59,7 +62,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
               (route) => false);
         }
-      }
+     // }
       setState(() {});
       if (mounted) {
         CustomSnackbar.show(context: context, message: 'Sign up successful');

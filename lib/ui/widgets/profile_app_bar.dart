@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/auth/login_page.dart';
+import 'package:read_rover/ui/auth/login_page.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 
 class ProfileAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -15,6 +15,24 @@ class ProfileAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ProfileAppBarState extends State<ProfileAppBar> {
+
+    String userName = 'Loading...';
+  String userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+ Future<void> _loadUserInfo() async {
+    final userData = await AuthUtils.getUserInfo();
+    setState(() {
+      userName = userData.user?.name ?? 'No name found';
+      userEmail = userData.user?.email ?? 'No email found';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -31,12 +49,11 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
               height: 8,
             ),
             Text(
-              (AuthUtils.userInfo.user?.name ?? 
-              'No name found'),
+              userName,
               style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
             Text(
-              AuthUtils.userInfo.user?.email ?? 'No email found',
+             userEmail,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,

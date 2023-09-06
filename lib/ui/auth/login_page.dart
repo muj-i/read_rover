@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/auth/email_verify_page.dart';
-import 'package:read_rover/auth/signup_page.dart';
+//import 'package:read_rover/auth/email_verify_page.dart';
+import 'package:read_rover/ui/auth/signup_page.dart';
 import 'package:read_rover/data/model/login_model.dart';
 import 'package:read_rover/data/model/network_response.dart';
 import 'package:read_rover/data/services/network_caller.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 import 'package:read_rover/data/utils/urls.dart';
-import 'package:read_rover/home_page.dart';
-import 'package:read_rover/widgets/constraints.dart';
+import 'package:read_rover/ui/home_page.dart';
+import 'package:read_rover/ui/widgets/constraints.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,14 +32,14 @@ class _LoginPageState extends State<LoginPage> {
       "email": _emailController.text.trim(),
       "password": _passWordController.text
     };
-    final NetworkResponse responce =
+    final NetworkResponse response =
         await NetworkCaller().postRequest(Urls.login, requestBody);
     _logInProgress = false;
     if (mounted) {
       setState(() {});
     }
-    if (responce.isSuccess) {
-      LoginModel model = LoginModel.fromJson(responce.body!);
+    if (response.isSuccess) {
+      LoginModel model = LoginModel.fromJson(response.body!);
       AuthUtils.saveUserInfo(model);
       if (mounted) {
         Navigator.pushAndRemoveUntil(
@@ -165,27 +165,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const EmailVerifyPage();
-                          },
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: myTextStyle,
-                    ),
-                  ),
-                ],
-              ),
+              // //
               const SizedBox(
                 height: 8,
               ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/splash_screen.dart';
-import 'package:read_rover/widgets/constraints.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:read_rover/ui/splash_screen.dart';
+import 'package:read_rover/ui/widgets/constraints.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(const ReadRoverApp());
 }
 

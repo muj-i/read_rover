@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/widgets/constraints.dart';
+import 'package:read_rover/data/model/get_book_file_model.dart';
+import 'package:read_rover/ui/widgets/constraints.dart';
 
-class TaskListTile extends StatelessWidget {
+class BookListTile extends StatelessWidget {
   final VoidCallback onDeletePress, onEditPress, onStatusChipPress;
   final Color chipBackgroundColor;
-  
+  final GetBookFile data;
 
-  const TaskListTile(
+  const BookListTile(
       {super.key,
       required this.chipBackgroundColor,
-      
       required this.onDeletePress,
       required this.onEditPress,
-      required this.onStatusChipPress});
+      required this.onStatusChipPress,
+      required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +24,11 @@ class TaskListTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
-        title: Text( 'No ittle found'),
+        title: Text(data.pageNo.toString() ?? 'No ittle found'),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text( 'No description found'),
+            Text('No description found'),
             const SizedBox(
               height: 8,
             ),
@@ -55,7 +56,7 @@ class TaskListTile extends StatelessWidget {
                 IconButton(
                   onPressed: onEditPress,
                   icon: Icon(
-                   Icons.one_x_mobiledata,
+                    Icons.one_x_mobiledata,
                     color: myColor,
                   ),
                 ),

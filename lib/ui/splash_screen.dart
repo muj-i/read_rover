@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:read_rover/auth/login_page.dart';
+import 'package:read_rover/ui/auth/login_page.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
-import 'package:read_rover/home_page.dart';
+import 'package:read_rover/ui/home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
