@@ -13,18 +13,18 @@ class GetBookFile {
     if (json['rows'] != null) {
       rows = <Rows>[];
       json['rows'].forEach((v) {
-        rows!.add(new Rows.fromJson(v));
+        rows!.add(Rows.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_pages'] = this.totalPages;
-    data['limit'] = this.limit;
-    data['page_no'] = this.pageNo;
-    if (this.rows != null) {
-      data['rows'] = this.rows!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_pages'] = totalPages;
+    data['limit'] = limit;
+    data['page_no'] = pageNo;
+    if (rows != null) {
+      data['rows'] = rows!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -80,21 +80,21 @@ class Rows {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['author_id'] = this.authorId;
-    data['author_name'] = this.authorName;
-    data['no_of_pages'] = this.noOfPages;
-    data['publisher_id'] = this.publisherId;
-    data['publisher_name'] = this.publisherName;
-    data['category_id'] = this.categoryId;
-    data['category_name'] = this.categoryName;
-    data['publish_year'] = this.publishYear;
-    data['image'] = this.image;
-    data['pdf'] = this.pdf;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['author_id'] = authorId;
+    data['author_name'] = authorName;
+    data['no_of_pages'] = noOfPages;
+    data['publisher_id'] = publisherId;
+    data['publisher_name'] = publisherName;
+    data['category_id'] = categoryId;
+    data['category_name'] = categoryName;
+    data['publish_year'] = publishYear;
+    data['image'] = image;
+    data['pdf'] = pdf;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

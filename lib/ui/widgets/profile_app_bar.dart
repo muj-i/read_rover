@@ -3,6 +3,8 @@ import 'package:read_rover/ui/auth/login_page.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 
 class ProfileAppBar extends StatefulWidget implements PreferredSizeWidget {
+ 
+ 
   const ProfileAppBar({
     super.key,
   });

@@ -1,42 +1,75 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:read_rover/data/model/get_book_file_model.dart';
-import 'package:read_rover/data/model/network_response.dart';
-import 'package:read_rover/data/services/network_caller.dart';
-import 'package:read_rover/data/utils/urls.dart';
-import 'package:read_rover/ui/widgets/book_list_tile.dart';
-import 'package:read_rover/ui/widgets/constraints.dart';
-import 'package:read_rover/ui/widgets/profile_app_bar.dart';
+import 'package:http/http.dart' as http;
+import 'package:read_rover/data/utils/auth_utils.dart';
+import 'package:read_rover/ui/auth/login_page.dart';
+//import 'package:read_rover/ui/widgets/profile_app_bar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _getBookFileInProgress = false;
+  List<dynamic> books = []; 
 
-  GetBookFile _getBookFile = GetBookFile();
+  @override
+  void initState() {
+    super.initState();
+    fetchBooks();
+    _loadUserInfo();
+  }
 
-  Future<void> getNewTask() async {
-    _getBookFileInProgress = true;
+  String userName = 'Loading...';
+  String userEmail = '';
 
-    if (mounted) {
-      setState(() {});
-    }
-    final NetworkResponse response =
-        await NetworkCaller().getRequest(Urls.getBookFile);
-    _getBookFileInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-    if (response.isSuccess) {
-      _getBookFile = GetBookFile.fromJson(response.body!);
+  Future<void> _loadUserInfo() async {
+    final userData = await AuthUtils.getUserInfo();
+    setState(() {
+      userName = userData.user?.name ?? 'No name found';
+      userEmail = userData.user?.email ?? 'No email found';
+    });
+  }
+  // Future<void> fetchBooks() async {
+
+  //   final response =
+  //       await http.get(Uri.parse('http://20.239.87.34:8080/books'));
+
+  //   if (response.statusCode == 200) {
+  //     setState(() {
+  //       books = json.decode(response.body)['rows'];
+  //     });
+  //   } else {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(const SnackBar(content: Text('Failed')));
+  //     }
+  //   }
+  // }
+  Future<void> fetchBooks() async {
+    final userData = await AuthUtils.getUserInfo();
+    final String token = userData.accessToken.toString();
+    //'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJpc19hZG1pbiI6ZmFsc2UsImV4cCI6MTY5NDQ2OTgwOX0.MYfKh28YxoPEegcsjjFUwPOJdRVyL-cpkHe5Ewo_j44'; // Replace with your authentication token
+
+    final response = await http.get(
+      Uri.parse('http://20.239.87.34:8080/books'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        books = json.decode(response.body)['rows'];
+      });
     } else {
       if (mounted) {
-        CustomSnackbar.show(
-            context: context, message: 'Tasks cannot be loaded');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Failed')));
       }
     }
   }
@@ -44,86 +77,61 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
-      appBar: const ProfileAppBar(),
-      body: SingleChildScrollView(
-        scrollDirection:
-            Axis.vertical, // Enable vertical scrolling for the entire column
-        child: Column(
+      backgroundColor: Colors.grey,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                fetchBooks();
+              },
+              icon: Icon(Icons.refresh)),
+          IconButton(
+              onPressed: () {
+                 AuthUtils.clearUserInfo();
+
+         if(mounted)   {  Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  (route) => false);}
+              },
+              icon: Icon(Icons.logout))
+        ],
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal, // Enable horizontal scrolling
-              child: Row(
-                children: List.generate(
-                  10, // Adjust the number of items as needed
-                  (index) {
-                    return Container(
-                      height: 200,
-                      width: 200, // Adjust the width of your grid items
-                      margin: const EdgeInsets.all(10.0),
-                      child: Card(
-                        child: Center(
-                          child: Text(
-                            'Item $index',
-                            style: const TextStyle(fontSize: 24.0),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
             const SizedBox(
-              height: 10,
+              height: 8,
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal, // Enable horizontal scrolling
-              child: Row(
-                children: List.generate(
-                  10, // Adjust the number of items as needed
-                  (index) {
-                    return Container(
-                      height: 200,
-                      width: 200, // Adjust the width of your grid items
-                      margin: const EdgeInsets.all(10.0),
-                      child: Card(
-                        child: Center(
-                          child: Text(
-                            'Item $index',
-                            style: const TextStyle(fontSize: 24.0),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            Text(
+              userName,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
-            SizedBox(
-              height: 300,
-              child: ListView.builder(
-                shrinkWrap:
-                    true, // Allow the ListView to take the necessary vertical space
-                itemBuilder: (context, index) {
-                  final reversedIndex = _getBookFile.rows!.length - 1 - index;
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                    child: BookListTile(
-                      chipBackgroundColor: Colors.cyan,
-                      onDeletePress: () {},
-                      onEditPress: () {},
-                      onStatusChipPress: () {},
-                      data: null,
-                    ),
-                  );
-                },
-                itemCount: 10,
+            Text(
+              userEmail,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
               ),
             ),
           ],
         ),
+      ),
+      body: ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          final book = books[index];
+
+          return ListTile(
+            title: Text(book['name']),
+            subtitle: Text(book['author_name']),
+            leading: CachedNetworkImage(
+              imageUrl: 'http://20.239.87.34:8080${book['image']}',
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ),
+            onTap: () {},
+          );
+        },
       ),
     );
   }

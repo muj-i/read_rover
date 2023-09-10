@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:read_rover/data/model/get_book_file_model.dart';
 import 'package:read_rover/data/model/signup_model.dart';
 import 'package:read_rover/data/model/login_model.dart';
 
@@ -9,6 +10,7 @@ class AuthUtils {
   static final box = GetStorage();
   static LoginModel userInfo = LoginModel();
   static SignupModel signupUserInfo = SignupModel();
+  static GetBookFile bookListInfo = GetBookFile();
 
   static Future<LoginModel> getUserInfo() async {
     //final box = GetStorage();
@@ -45,5 +47,6 @@ class AuthUtils {
    final   userInfo = await getUserInfo();
     }
     return isLogin;
-  }
+  
+}
 }
