@@ -39,6 +39,20 @@ dependencies:
   http: ^0.13.3  # For making HTTP requests
   cached_network_image: ^3.1.0
   get_storage:
+  flutter_launcher_icons: ^0.13.1 #icon generate command: flutter pub run flutter_launcher_icons
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icons/logo.jpg"
+  web:
+    generate: true
+    image_path: "assets/icons/logo.jpg"
+  macos:
+    generate: true
+    image_path: "assets/icons/logo.jpg"
+    icon_size: 48
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,14 @@
-# read_rover
+# ReadRover
 
-A new Flutter project.
+A New Flutter Online Book Library Application.
+
+## App View
+
+![Alt Text](screenshots/ss1.png)
+![Alt Text](screenshots/ss2.png)
+![Alt Text](screenshots/ss3.png)
+![Alt Text](screenshots/ss4.png)
+
 
 ## Getting Started
 

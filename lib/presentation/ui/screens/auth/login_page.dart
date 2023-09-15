@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-//import 'package:read_rover/auth/email_verify_page.dart';
-import 'package:read_rover/ui/auth/signup_page.dart';
 import 'package:read_rover/data/model/login_model.dart';
 import 'package:read_rover/data/model/network_response.dart';
 import 'package:read_rover/data/services/network_caller.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 import 'package:read_rover/data/utils/urls.dart';
-import 'package:read_rover/ui/home_page.dart';
-import 'package:read_rover/ui/widgets/constraints.dart';
+//import 'package:read_rover/auth/email_verify_page.dart';
+import 'package:read_rover/presentation/ui/screens/auth/signup_page.dart';
+import 'package:read_rover/presentation/ui/screens/home_page.dart';
+import 'package:read_rover/presentation/ui/widgets/constraints.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) =>  HomePage() //!BottomNavBasePage()
+                builder: (context) => const HomePage() //!BottomNavBasePage()
                 ),
             (route) => false);
       }
@@ -61,9 +61,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
         body: SingleChildScrollView(
-        
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Form(
@@ -73,77 +71,108 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 150,
+                height: 130,
               ),
               Text(
-                'Get Started With',
-                style: Theme.of(context).textTheme.titleLarge,
+                'Welcome Back',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: myTextColor),
+              ),
+              Text(
+                ' Please enter your details',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: myTextColor),
+              ),
+              Center(
+                child: Image.asset(
+                  'assets/images/login.png',
+                  //width: 125,
+                  fit: BoxFit.fill,
+                ),
               ),
               const SizedBox(
-                height: 16,
+                height: 20,
               ),
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  hintText: 'Email Address',
-                  prefixIcon: Icon(
-                    Icons.email_rounded,
-                    size: 22,
+              Text(
+                'Email Address',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: myOtherTextColor),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter Your Email Address',
                   ),
+                  validator: (String? value) {
+                    if (value?.isEmpty ?? true) {
+                      return "Enter your email address";
+                    }
+                    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                        .hasMatch(value!)) {
+                      return "Enter a valid email address";
+                    }
+                    return null;
+                  },
                 ),
-                validator: (String? value) {
-                  if (value?.isEmpty ?? true) {
-                    return "Enter your email address";
-                  }
-                  if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                      .hasMatch(value!)) {
-                    return "Enter a valid email address";
-                  }
-                  return null;
-                },
               ),
               const SizedBox(
                 height: 12,
               ),
-              TextFormField(
-                controller: _passWordController,
-                obscureText: _obscurePassword,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  prefixIcon: const Icon(
-                    Icons.lock_rounded,
-                    size: 22,
-                  ),
-                  suffixIcon: IconButton(
-                    color: myColor,
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+              Text(
+                'Password',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: myOtherTextColor),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: TextFormField(
+                  controller: _passWordController,
+                  obscureText: _obscurePassword,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Your Password',
+                    
+                    suffixIcon: IconButton(
+                      color: myColor,
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
                   ),
+                  validator: (String? value) {
+                    if ((value?.isEmpty ?? true) || value!.length <= 5) {
+                      return "Enter your password";
+                    }
+                    return null;
+                  },
                 ),
-                validator: (String? value) {
-                  if ((value?.isEmpty ?? true) || value!.length <= 5) {
-                    return "Enter your password";
-                  }
-                  return null;
-                },
               ),
               const SizedBox(
                 height: 12,
               ),
               SizedBox(
                 width: double.infinity,
+                height: 50,
                 child: Visibility(
                   visible: _logInProgress == false,
                   replacement: const Center(child: CircularProgressIndicator()),
@@ -163,10 +192,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 20,
-              ),
-              // //
-              const SizedBox(
                 height: 8,
               ),
               signUpOption()
@@ -182,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have account?",
+          "Don't have an account?",
           style: myTextStyle,
         ),
         TextButton(

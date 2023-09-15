@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:read_rover/data/model/get_book_file_model.dart';
-import 'package:read_rover/ui/widgets/constraints.dart';
+import 'package:read_rover/presentation/ui/widgets/constraints.dart';
 
 class BookListTile extends StatelessWidget {
   final VoidCallback onDeletePress, onEditPress, onStatusChipPress;
