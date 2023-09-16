@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/presentation/ui/screens/auth/login_page.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
+import 'package:read_rover/presentation/ui/screens/user_screen.dart';
+import 'package:read_rover/presentation/ui/widgets/appbar_iconbutton.dart';
+import 'package:read_rover/presentation/ui/utils/constraints.dart';
 
 class ProfileAppBar extends StatefulWidget implements PreferredSizeWidget {
- 
- 
   const ProfileAppBar({
     super.key,
   });
@@ -17,8 +17,7 @@ class ProfileAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ProfileAppBarState extends State<ProfileAppBar> {
-
-    String userName = 'Loading...';
+  String userName = 'Loading...';
   String userEmail = '';
 
   @override
@@ -27,7 +26,7 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
     _loadUserInfo();
   }
 
- Future<void> _loadUserInfo() async {
+  Future<void> _loadUserInfo() async {
     final userData = await AuthUtils.getUserInfo();
     setState(() {
       userName = userData.user?.name ?? 'No name found';
@@ -37,70 +36,35 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigator.push(context,
-        //     MaterialPageRoute(builder: (context) => const ProfilePage()));
-      },
-      child: AppBar(
-        elevation: 00,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              userName,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            Text(
-             userEmail,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                
-              });
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const AboutPage()),
-              // );
-            },
-            icon: const Icon(Icons.error_outline_rounded),
-          ),
-          IconButton(
-            onPressed: ()  {
-              // DialogBox.show(
-              //   context: context,
-              //   contentMessage: 'Do you want to log out?',
-              //   leftButtonText: 'Cancel',
-              //   rightButtonText: 'Log out',
-              //   onLeftButtonPressed: () {
-              //     Navigator.pop(context);
-              //   },
-              //   onRightButtonPressed: () async {
-               AuthUtils.clearUserInfo();
-
-         if(mounted)   {  Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                  (route) => false);}
-              //   },
-              // );
-            },
-            icon: const Icon(Icons.logout_rounded),
-          ),
-        ],
+    return AppBar(
+      elevation: 00,
+      backgroundColor: myAppBarColor,
+      title: Text(
+        'Greetings, $userName.',
+        style: myTextStyle.copyWith(fontSize: 20),
       ),
+      centerTitle: false,
+      actions: [
+        AppBarIconButton(
+          icon: Icons.person,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const UserScreen()),
+            );
+          },
+        ),
+        const SizedBox(
+          width: 16,
+        )
+
+        // IconButton(
+        //   onPressed: () {
+        //    
+        //   },
+        //   icon: const Icon(Icons.logout_rounded),
+        // ),
+      ],
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:read_rover/presentation/ui/screens/splash_screen.dart';
-import 'package:read_rover/presentation/ui/widgets/color_palette.dart';
-import 'package:read_rover/presentation/ui/widgets/constraints.dart';
+import 'package:read_rover/presentation/ui/utils/color_palette.dart';
+import 'package:read_rover/presentation/ui/utils/constraints.dart';
 
 class ReadRoverApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -53,9 +53,10 @@ class _ReadRoverAppState extends State<ReadRoverApp> {
               errorStyle:
                   const TextStyle(color: Color.fromARGB(255, 255, 0, 0))),
           textTheme: const TextTheme(
+            
             titleLarge: TextStyle(
                 fontSize: 24,
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.6),
           ),

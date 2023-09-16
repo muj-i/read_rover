@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/presentation/ui/screens/auth/login_page.dart';
+import 'package:read_rover/presentation/ui/screens/auth/login_screen.dart';
+import 'package:read_rover/presentation/ui/screens/auth/signup_screen.dart';
+import 'package:read_rover/presentation/ui/utils/assets_images.dart';
+import 'package:read_rover/presentation/ui/utils/color_palette.dart';
+import 'package:read_rover/presentation/ui/utils/constraints.dart';
 
 class GetstartedScreen extends StatefulWidget {
   const GetstartedScreen({super.key});
@@ -9,12 +13,9 @@ class GetstartedScreen extends StatefulWidget {
 }
 
 class _GetstartedScreenState extends State<GetstartedScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
       body: SafeArea(
         child: Column(
           children: [
@@ -23,7 +24,7 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
             ),
             Center(
               child: Image.asset(
-                'assets/images/people_read_books_digital.png',
+                AppImageAssets.people,
                 //width: 125,
                 fit: BoxFit.fill,
               ),
@@ -37,26 +38,28 @@ class _GetstartedScreenState extends State<GetstartedScreen> {
               style: TextStyle(fontSize: 16),
             ),
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
               child: SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    child: const Text(
-                      'Get Started',
-                      style: TextStyle(fontSize: 18),
-                    )),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  child: Text(
+                    'Get Started',
+                    style: elevatedButtonTextStyle,
+                  ),
+                ),
               ),
-            )
+            ),
+           
           ],
         ),
       ),

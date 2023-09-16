@@ -2,14 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:read_rover/application/app.dart';
-import 'package:read_rover/presentation/ui/screens/auth/login_page.dart';
 import 'package:read_rover/data/model/network_response.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
-
+import 'package:read_rover/presentation/ui/screens/auth/login_screen.dart';
 
 class NetworkCaller {
   //final box = GetStorage();
@@ -21,16 +18,18 @@ class NetworkCaller {
     try {
       Response response = await get(
         Uri.parse(url),
-        headers: {'Authorization': 'Bearer $token'// AuthUtils.userInfo.accessToken.toString() //! ?? AuthUtils.signupUserInfo.accessToken.toString()
+        headers: {
+          'Authorization':
+              'Bearer $token' // AuthUtils.userInfo.accessToken.toString() //! ?? AuthUtils.signupUserInfo.accessToken.toString()
         },
       );
-     // json.decode(response.body)['rows'];
-     // final Map<String, dynamic> decodedResponse = json.decode(response.body);
+      // json.decode(response.body)['rows'];
+      // final Map<String, dynamic> decodedResponse = json.decode(response.body);
       log(response.statusCode.toString());
       log(response.body);
-      if (response.statusCode == 200 
-      //&& decodedResponse['status'] == 'success'
-      ) {
+      if (response.statusCode == 200
+          //&& decodedResponse['status'] == 'success'
+          ) {
         return NetworkResponse(
             true, response.statusCode, jsonDecode(response.body)['rows']);
       } else if (response.statusCode == 401) {
@@ -47,14 +46,15 @@ class NetworkCaller {
   //post request
   Future<NetworkResponse> postRequest(String url, Map<String, dynamic> body,
       {bool isLogin = false}) async {
-        final userData = await AuthUtils.getUserInfo();
+    final userData = await AuthUtils.getUserInfo();
     final String token = userData.accessToken.toString();
     try {
       log(body.toString());
       Response response = await post(Uri.parse(url),
           headers: {
             "Content-Type": "application/json",
-            'Authorization': 'Bearer $token'//AuthUtils.userInfo.accessToken.toString() //! ?? AuthUtils.signupUserInfo.accessToken.toString()
+            'Authorization':
+                'Bearer $token' //AuthUtils.userInfo.accessToken.toString() //! ?? AuthUtils.signupUserInfo.accessToken.toString()
           },
           body: jsonEncode(body));
 
@@ -80,7 +80,7 @@ class NetworkCaller {
     await AuthUtils.clearUserInfo();
     Navigator.pushAndRemoveUntil(
         ReadRoverApp.navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (route) => false);
   }
 }

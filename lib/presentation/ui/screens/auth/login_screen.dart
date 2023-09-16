@@ -1,74 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:read_rover/data/model/login_model.dart';
 import 'package:read_rover/data/model/network_response.dart';
-import 'package:read_rover/data/model/signup_model.dart';
 import 'package:read_rover/data/services/network_caller.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 import 'package:read_rover/data/utils/urls.dart';
-import 'package:read_rover/presentation/ui/screens/auth/login_page.dart';
-import 'package:read_rover/presentation/ui/screens/home_page.dart';
-import 'package:read_rover/presentation/ui/widgets/constraints.dart';
+//import 'package:read_rover/auth/email_verify_page.dart';
+import 'package:read_rover/presentation/ui/screens/auth/signup_screen.dart';
+import 'package:read_rover/presentation/ui/screens/home_screen.dart';
+import 'package:read_rover/presentation/ui/utils/assets_images.dart';
+import 'package:read_rover/presentation/ui/utils/constraints.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passWordController = TextEditingController();
-  bool _obscurePassword = true, _signUpInProgress = false;
+  bool _obscurePassword = true, _logInProgress = false;
 
-  Future<void> userSignUp() async {
-    _signUpInProgress = true;
+  Future<void> logIn() async {
+    _logInProgress = true;
     if (mounted) {
       setState(() {});
     }
 
     Map<String, dynamic> requestBody = {
-      "name": _nameController.text.trim(),
       "email": _emailController.text.trim(),
-      "password": _passWordController.text,
+      "password": _passWordController.text
     };
-
     final NetworkResponse response =
-        await NetworkCaller().postRequest(Urls.signup, requestBody);
-    _signUpInProgress = false;
+        await NetworkCaller().postRequest(Urls.login, requestBody);
+    _logInProgress = false;
     if (mounted) {
       setState(() {});
     }
     if (response.isSuccess) {
-      // Map<String, dynamic> requestBody = {
-      //   "email": _emailController.text.trim(),
-      //   "password": _passWordController.text,
-      // };
-      // final NetworkResponse response =
-      //     await NetworkCaller().postRequest(Urls.login, requestBody);
-      // if (response.isSuccess) {
-      //   AuthUtils.saveUserInfo(LoginModel.fromJson(response.body!));
-      //   setState(() {});
-      SignupModel model = SignupModel.fromJson(response.body!);
-      AuthUtils.saveSignupUserInfo(model);
+      LoginModel model = LoginModel.fromJson(response.body!);
+      AuthUtils.saveUserInfo(model);
       if (mounted) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => const HomePage() //!BottomNavBasePage()
+                builder: (context) => const HomeScreen() //!BottomNavBasePage()
                 ),
             (route) => false);
       }
-      // }
       setState(() {});
-      if (mounted) {
-        CustomSnackbar.show(context: context, message: 'Sign up successful');
-      }
     } else {
       if (mounted) {
-        CustomSnackbar.show(context: context, message: 'Sign up failed');
+        CustomSnackbar.show(
+            context: context, message: 'Incorrect email address or password');
       }
     }
   }
@@ -86,64 +72,34 @@ class _SignupPageState extends State<SignupPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 100,
+                height: 130,
               ),
               Text(
-                'Hello There',
+                'Welcome Back',
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
                     ?.copyWith(color: myTextColor),
               ),
               Text(
-                'Register below with your details',
+                ' Please enter your details',
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
                     ?.copyWith(color: myTextColor),
               ),
-              const SizedBox(
-                height: 20,
-              ),
               Center(
                 child: Image.asset(
-                  'assets/images/signup.png',
-                  //width: 125,
+                   AppImageAssets.logIn,
+                  width: 350,
                   fit: BoxFit.fill,
                 ),
               ),
               const SizedBox(
-                height: 16,
+                height: 20,
               ),
               Text(
-                'Enter Name',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: myOtherTextColor),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: TextFormField(
-                  controller: _nameController,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter Your Name',
-                  ),
-                  validator: (String? value) {
-                    if (value?.isEmpty ?? true) {
-                      return "Enter your name";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
-                'Enter Email Address',
+                'Email',
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -156,7 +112,7 @@ class _SignupPageState extends State<SignupPage> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
-                    hintText: 'Email Your Address',
+                    hintText: 'Enter Your Email Address',
                   ),
                   validator: (String? value) {
                     if (value?.isEmpty ?? true) {
@@ -174,7 +130,7 @@ class _SignupPageState extends State<SignupPage> {
                 height: 12,
               ),
               Text(
-                'Enter Password',
+                'Password',
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -184,9 +140,9 @@ class _SignupPageState extends State<SignupPage> {
                 padding: const EdgeInsets.only(top: 12.0),
                 child: TextFormField(
                   controller: _passWordController,
+                  obscureText: _obscurePassword,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
-                  obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     hintText: 'Enter Your Password',
                     suffixIcon: IconButton(
@@ -204,16 +160,9 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   validator: (String? value) {
-                    if ((value?.isEmpty ?? true) || value!.length <= 7) {
-                      return "Minimum password length should be 8";
+                    if ((value?.isEmpty ?? true) || value!.length <= 5) {
+                      return "Enter your password";
                     }
-                    final RegExp passwordRegex = RegExp(
-                        r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
-              
-                    if (!passwordRegex.hasMatch(value)) {
-                      return "Password should contain \nletters, numbers, and symbols.";
-                    }
-              
                     return null;
                   },
                 ),
@@ -223,24 +172,22 @@ class _SignupPageState extends State<SignupPage> {
               ),
               SizedBox(
                 width: double.infinity,
+                height: 50,
                 child: Visibility(
-                  visible: _signUpInProgress == false,
+                  visible: _logInProgress == false,
                   replacement: const Center(child: CircularProgressIndicator()),
                   child: ElevatedButton(
                     onPressed: () {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       }
-                      userSignUp()
-                          // .then((value) =>
-                          //     Navigator.pushAndRemoveUntil(
-                          //         context,
-                          //         MaterialPageRoute(
-                          //             builder: (context) => const LoginPage()),
-                          //         (route) => false))
-                          ;
+                      logIn();
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const HomePage()));
                     },
-                    child: Text('Sign Up', style: myButtonTextColor),
+                    child: Text('Log In', style: elevatedButtonTextStyle),
                   ),
                 ),
               ),
@@ -260,18 +207,18 @@ class _SignupPageState extends State<SignupPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Already have account?",
+          "Don't have an account?",
           style: myTextStyle,
         ),
         TextButton(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
+                MaterialPageRoute(builder: (context) => const SignupScreen()),
                 (route) => false);
           },
           child: Text(
-            "Log in",
+            "Sign Up",
             style: myTextButtonStyle,
           ),
         )

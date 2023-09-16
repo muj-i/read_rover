@@ -1,59 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:read_rover/data/model/login_model.dart';
 import 'package:read_rover/data/model/network_response.dart';
+import 'package:read_rover/data/model/signup_model.dart';
 import 'package:read_rover/data/services/network_caller.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 import 'package:read_rover/data/utils/urls.dart';
-//import 'package:read_rover/auth/email_verify_page.dart';
-import 'package:read_rover/presentation/ui/screens/auth/signup_page.dart';
-import 'package:read_rover/presentation/ui/screens/home_page.dart';
-import 'package:read_rover/presentation/ui/widgets/constraints.dart';
+import 'package:read_rover/presentation/ui/screens/auth/login_screen.dart';
+import 'package:read_rover/presentation/ui/screens/home_screen.dart';
+import 'package:read_rover/presentation/ui/utils/assets_images.dart';
+import 'package:read_rover/presentation/ui/utils/constraints.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupScreenState extends State<SignupScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passWordController = TextEditingController();
-  bool _obscurePassword = true, _logInProgress = false;
+  bool _obscurePassword = true, _signUpInProgress = false;
 
-  Future<void> logIn() async {
-    _logInProgress = true;
+  Future<void> userSignUp() async {
+    _signUpInProgress = true;
     if (mounted) {
       setState(() {});
     }
 
     Map<String, dynamic> requestBody = {
+      "name": _nameController.text.trim(),
       "email": _emailController.text.trim(),
-      "password": _passWordController.text
+      "password": _passWordController.text,
     };
+
     final NetworkResponse response =
-        await NetworkCaller().postRequest(Urls.login, requestBody);
-    _logInProgress = false;
+        await NetworkCaller().postRequest(Urls.signup, requestBody);
+    _signUpInProgress = false;
     if (mounted) {
       setState(() {});
     }
     if (response.isSuccess) {
-      LoginModel model = LoginModel.fromJson(response.body!);
-      AuthUtils.saveUserInfo(model);
+      // Map<String, dynamic> requestBody = {
+      //   "email": _emailController.text.trim(),
+      //   "password": _passWordController.text,
+      // };
+      // final NetworkResponse response =
+      //     await NetworkCaller().postRequest(Urls.login, requestBody);
+      // if (response.isSuccess) {
+      //   AuthUtils.saveUserInfo(LoginModel.fromJson(response.body!));
+      //   setState(() {});
+      SignupModel model = SignupModel.fromJson(response.body!);
+      AuthUtils.saveSignupUserInfo(model);
       if (mounted) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => const HomePage() //!BottomNavBasePage()
+                builder: (context) => const HomeScreen() //!BottomNavBasePage()
                 ),
             (route) => false);
       }
+      // }
       setState(() {});
+      if (mounted) {
+        CustomSnackbar.show(context: context, message: 'Sign up successful');
+      }
     } else {
       if (mounted) {
-        CustomSnackbar.show(
-            context: context, message: 'Incorrect email address or password');
+        CustomSnackbar.show(context: context, message: 'Sign up failed');
       }
     }
   }
@@ -71,34 +87,64 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 130,
+                height: 100,
               ),
               Text(
-                'Welcome Back',
+                'Hello There',
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
                     ?.copyWith(color: myTextColor),
               ),
               Text(
-                ' Please enter your details',
+                'Register below with your details',
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
                     ?.copyWith(color: myTextColor),
               ),
+              const SizedBox(
+                height: 20,
+              ),
               Center(
                 child: Image.asset(
-                  'assets/images/login.png',
+                 AppImageAssets.signUp,
                   //width: 125,
                   fit: BoxFit.fill,
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 16,
               ),
               Text(
-                'Email Address',
+                'Name',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: myOtherTextColor),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: TextFormField(
+                  controller: _nameController,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter Your Name',
+                  ),
+                  validator: (String? value) {
+                    if (value?.isEmpty ?? true) {
+                      return "Enter your name";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                'Email',
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -111,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
-                    hintText: 'Enter Your Email Address',
+                    hintText: 'Email Your Address',
                   ),
                   validator: (String? value) {
                     if (value?.isEmpty ?? true) {
@@ -139,12 +185,11 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(top: 12.0),
                 child: TextFormField(
                   controller: _passWordController,
-                  obscureText: _obscurePassword,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
+                  obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     hintText: 'Enter Your Password',
-                    
                     suffixIcon: IconButton(
                       color: myColor,
                       icon: Icon(
@@ -160,9 +205,16 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   validator: (String? value) {
-                    if ((value?.isEmpty ?? true) || value!.length <= 5) {
-                      return "Enter your password";
+                    if ((value?.isEmpty ?? true) || value!.length <= 7) {
+                      return "Minimum password length should be 8";
                     }
+                    final RegExp passwordRegex = RegExp(
+                        r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+
+                    if (!passwordRegex.hasMatch(value)) {
+                      return "Password should contain \nletters, numbers, and symbols.";
+                    }
+
                     return null;
                   },
                 ),
@@ -174,20 +226,23 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 height: 50,
                 child: Visibility(
-                  visible: _logInProgress == false,
+                  visible: _signUpInProgress == false,
                   replacement: const Center(child: CircularProgressIndicator()),
                   child: ElevatedButton(
                     onPressed: () {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       }
-                      logIn();
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const HomePage()));
+                      userSignUp()
+                          // .then((value) =>
+                          //     Navigator.pushAndRemoveUntil(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) => const LoginPage()),
+                          //         (route) => false))
+                          ;
                     },
-                    child: Text('Log In', style: myButtonTextColor),
+                    child: Text('Sign Up', style: elevatedButtonTextStyle),
                   ),
                 ),
               ),
@@ -207,18 +262,18 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account?",
+          "Already have account?",
           style: myTextStyle,
         ),
         TextButton(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => const SignupPage()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
                 (route) => false);
           },
           child: Text(
-            "Sign Up",
+            "Log in",
             style: myTextButtonStyle,
           ),
         )

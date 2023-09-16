@@ -1,22 +1,21 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:read_rover/data/model/get_book_file_model.dart';
-import 'package:read_rover/data/model/network_response.dart';
-import 'package:read_rover/data/services/network_caller.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
-import 'package:read_rover/data/utils/urls.dart';
-import 'package:read_rover/presentation/ui/screens/auth/login_page.dart';
+import 'package:read_rover/presentation/ui/utils/constraints.dart';
+import 'package:read_rover/presentation/ui/widgets/profile_app_bar.dart';
 //import 'package:read_rover/ui/widgets/profile_app_bar.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> books = [];
   final GetBookFile _getBookFile = GetBookFile();
   @override
@@ -24,18 +23,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     fetchBooks();
     //getNewBook();
-    _loadUserInfo();
-  }
-
-  String userName = 'Loading...';
-  String userEmail = '';
-
-  Future<void> _loadUserInfo() async {
-    final userData = await AuthUtils.getUserInfo();
-    setState(() {
-      userName = userData.user?.name ?? 'No name found';
-      userEmail = userData.user?.email ?? 'No email found';
-    });
   }
 
   Future<void> fetchBooks() async {
@@ -91,56 +78,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                 fetchBooks();
-                //getNewBook();
-              },
-              icon: const Icon(Icons.refresh)),
-          IconButton(
-              onPressed: () {
-                AuthUtils.clearUserInfo();
-
-                if (mounted) {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                      (route) => false);
-                }
-              },
-              icon: const Icon(Icons.logout))
-        ],
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              userName,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            Text(
-              userEmail,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
+      backgroundColor: myAppBarColor,
+      appBar: const ProfileAppBar(),
       body: GridView.builder(
         itemCount: books.length,
         itemBuilder: (context, index) {
           final book = books[index];
-
+      
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: Container(
               color: Colors.green,
               child: ListTile(
@@ -162,8 +108,8 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2),
       ),
     );
   }

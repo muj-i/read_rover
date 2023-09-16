@@ -40,6 +40,7 @@ dependencies:
   cached_network_image: ^3.1.0
   get_storage:
   flutter_launcher_icons: ^0.13.1 #icon generate command: flutter pub run flutter_launcher_icons
+  font_awesome_flutter: 
 
 flutter_launcher_icons:
   android: true
