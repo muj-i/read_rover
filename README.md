@@ -8,6 +8,8 @@ A New Flutter Online Book Library Application.
 ![Alt Text](screenshots/ss2.png)
 ![Alt Text](screenshots/ss3.png)
 ![Alt Text](screenshots/ss4.png)
+![Alt Text](screenshots/ss5.png)
+![Alt Text](screenshots/ss6.png)
 ![Alt Text](screenshots/ss7.png)
 
 

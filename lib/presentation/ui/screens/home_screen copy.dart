@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:read_rover/data/model/get_book_file_model.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
-import 'package:read_rover/presentation/ui/screens/book_details_screen.dart';
 import 'package:read_rover/presentation/ui/utils/constraints.dart';
-import 'package:read_rover/presentation/ui/widgets/book_list_card.dart';
 import 'package:read_rover/presentation/ui/widgets/profile_app_bar.dart';
 //import 'package:read_rover/ui/widgets/profile_app_bar.dart';
 
@@ -24,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchBooks();
-    //getNewBooks();
+    //getNewBook();
   }
 
   Future<void> fetchBooks() async {
@@ -51,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Future<void> getNewBooks() async {
+  // Future<void> getNewBook() async {
   //   final userData = await AuthUtils.getUserInfo();
   //   final String token = userData.accessToken.toString();
 
@@ -82,57 +80,36 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: myAppBarColor,
       appBar: const ProfileAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: Row(
-                children: [
-                  const Text(
-                    'Discover',
-                    style: TextStyle(fontSize: 26, color: Colors.black),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 800,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
-                child: GridView.builder(
-                  itemCount: books.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const BookDetailsScreen()),
-                        );
-                      },
-                      child: BookListCard(
-                        bookName: books[index]['name'],
-                        bookAuthorName: books[index]['author_name'],
-                        imageUrl: 'imageUrl',
-                      ),
-                    );
-                  },
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
+      body: GridView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          final book = books[index];
+      
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              color: Colors.green,
+              child: ListTile(
+                title: Text(book['name']),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(book['author_name']),
+                    Text(book['publisher_name']),
+                  ],
                 ),
+                // leading: CachedNetworkImage(
+                //   imageUrl: 'http://20.239.87.34:8080${book['image']}',
+                //   placeholder: (context, url) => const CircularProgressIndicator(),
+                //   errorWidget: (context, url, error) => const Icon(Icons.error),
+                // ),
+                onTap: () {},
               ),
             ),
-          ],
-        ),
+          );
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2),
       ),
     );
   }

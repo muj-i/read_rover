@@ -37,8 +37,9 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      toolbarHeight: 100,
       elevation: 00,
-      backgroundColor: myAppBarColor,
+      backgroundColor:myAppBarColor,
       title: Text(
         'Greetings, $userName.',
         style: myTextStyle.copyWith(fontSize: 20),
@@ -58,12 +59,7 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
           width: 16,
         )
 
-        // IconButton(
-        //   onPressed: () {
-        //    
-        //   },
-        //   icon: const Icon(Icons.logout_rounded),
-        // ),
+       
       ],
     );
   }
