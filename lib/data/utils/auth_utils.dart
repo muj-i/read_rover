@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:read_rover/data/model/get_book_file_model.dart';
-import 'package:read_rover/data/model/signup_model.dart';
-import 'package:read_rover/data/model/login_model.dart';
 
 import 'package:get_storage/get_storage.dart';
+import 'package:read_rover/data/model/get_book_file_model.dart';
+import 'package:read_rover/data/model/login_model.dart';
+import 'package:read_rover/data/model/signup_model.dart';
 
 class AuthUtils {
   AuthUtils._();
@@ -24,16 +24,16 @@ class AuthUtils {
   }
 
   static Future<void> saveUserInfo(LoginModel loginModel) async {
-   // final box = GetStorage();
+    // final box = GetStorage();
     await box.write('user-data', jsonEncode(loginModel.toJson()));
     userInfo = loginModel;
   }
 
-   static Future<void> saveSignupUserInfo(SignupModel signupModel) async {
-  //   final box = GetStorage();
-     await box.write('user-data', jsonEncode(signupModel.toJson()));
-     signupUserInfo = signupModel;
-   }
+  static Future<void> saveSignupUserInfo(SignupModel signupModel) async {
+    //   final box = GetStorage();
+    await box.write('user-data', jsonEncode(signupModel.toJson()));
+    signupUserInfo = signupModel;
+  }
 
   static Future<void> clearUserInfo() async {
     //final box = GetStorage();
@@ -44,9 +44,8 @@ class AuthUtils {
     //final box = GetStorage();
     final isLogin = box.hasData('user-data');
     if (isLogin) {
-   final   userInfo = await getUserInfo();
+      final userInfo = await getUserInfo();
     }
     return isLogin;
-  
-}
+  }
 }

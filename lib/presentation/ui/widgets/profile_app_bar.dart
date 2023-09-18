@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:read_rover/data/utils/auth_utils.dart';
 import 'package:read_rover/presentation/ui/screens/user_screen.dart';
-import 'package:read_rover/presentation/ui/widgets/appbar_iconbutton.dart';
 import 'package:read_rover/presentation/ui/utils/constraints.dart';
+import 'package:read_rover/presentation/ui/widgets/appbar_iconbutton.dart';
 
 class ProfileAppBar extends StatefulWidget implements PreferredSizeWidget {
   const ProfileAppBar({
@@ -39,7 +39,7 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
     return AppBar(
       toolbarHeight: 100,
       elevation: 00,
-      backgroundColor:myAppBarColor,
+      backgroundColor: myAppBarColor,
       title: Text(
         'Greetings, $userName.',
         style: myTextStyle.copyWith(fontSize: 20),
@@ -47,19 +47,19 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
       centerTitle: false,
       actions: [
         AppBarIconButton(
-          icon: Icons.person,
+          icon: Icons.dashboard_rounded,
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const UserScreen()),
+              MaterialPageRoute(
+                builder: (context) => const UserScreen(),
+              ),
             );
           },
         ),
         const SizedBox(
           width: 16,
         )
-
-       
       ],
     );
   }
